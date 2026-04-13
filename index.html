@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VWorld 3D Basic Example</title>
+  <title>VWorld 2D Basic Example</title>
   <link rel="stylesheet" href="./static/style.css">
   <script src="./static/config.js"></script>
   <script>
@@ -15,40 +15,25 @@
         return;
       }
 
-      const isHttps = window.location.origin.indexOf("https:") >= 0;
-      const vworldUrl = isHttps ? "https://map.vworld.kr" : "http://map.vworld.kr";
+      const isHttps = window.location.protocol === "https:";
+      const baseUrl = isHttps ? "https://map.vworld.kr" : "http://map.vworld.kr";
+      const params = new URLSearchParams({
+        version: "2.0",
+        apiKey,
+        domain: window.location.host,
+      });
 
-      window.v_protocol = isHttps ? "https://" : "http://";
-      window.vworldUrl = vworldUrl;
-      window.vworld2DCache = isHttps ? "https://2d.vworld.kr/2DCache" : "http://2d.vworld.kr:8895/2DCache";
-      window.vworldBaseMapUrl = isHttps ? "https://cdn.vworld.kr/2d" : "http://cdn.vworld.kr:8080/2d";
-      window.vworldStyledMapUrl = isHttps ? "https://2d.vworld.kr/stmap" : "http://2d.vworld.kr:8895/stmap";
-      window.isUserDomain = window.location.origin;
-      window.vworldIsValid = "true";
-      window.vworldErrMsg = "";
-      window.vworldApiKey = apiKey;
-      window.vworld3DUrl = "/js/webglMapInit.js.do";
-      window.vworldNoCss = "n";
-      window.vworldVectorKey = "483E0418-2F46-3223-80A1-F66D16A24685";
       window.VWORLD_BOOTSTRAP = { skipped: false };
-
-      document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/WSViewerStartup.js"><\/script>`);
-      document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/VWViewerStartup.v30.min.js?ver=2024061902"><\/script>`);
-      document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/vw.ol3WebGL.v30.js?ver=2024061902"><\/script>`);
+      document.write(`<script src="${baseUrl}/js/vworldMapInit.js.do?${params.toString()}"><\/script>`);
     }());
   </script>
 </head>
 <body>
-  <div class="app-shell">
-    <div class="topbar">
-      <div>
-        <strong>VWorld 3D Basic Example</strong>
-        <span id="key-status">API key 확인 중...</span>
-      </div>
-      <div id="map-status">3D 지도 초기화 대기</div>
-    </div>
-    <div id="viewer-root" class="viewer-root"></div>
+  <div class="topbar">
+    <strong>VWorld 2D Basic Example</strong>
+    <span id="status">지도 초기화 대기</span>
   </div>
+  <div id="vmap" class="map-root"></div>
   <script src="./static/app.js"></script>
 </body>
 </html>
