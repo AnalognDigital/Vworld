@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VWorld Service URL Page</title>
-  <meta name="description" content="VWorld API와 3D 모델을 결합하기 위한 기본 웹페이지">
+  <title>VWorld 3D Basic Example</title>
   <link rel="stylesheet" href="./static/style.css">
   <script src="./static/config.js"></script>
   <script>
@@ -18,15 +17,12 @@
 
       const isHttps = window.location.origin.indexOf("https:") >= 0;
       const vworldUrl = isHttps ? "https://map.vworld.kr" : "http://map.vworld.kr";
-      const vworld2DCache = isHttps ? "https://2d.vworld.kr/2DCache" : "http://2d.vworld.kr:8895/2DCache";
-      const vworldBaseMapUrl = isHttps ? "https://cdn.vworld.kr/2d" : "http://cdn.vworld.kr:8080/2d";
-      const vworldStyledMapUrl = isHttps ? "https://2d.vworld.kr/stmap" : "http://2d.vworld.kr:8895/stmap";
 
       window.v_protocol = isHttps ? "https://" : "http://";
       window.vworldUrl = vworldUrl;
-      window.vworld2DCache = vworld2DCache;
-      window.vworldBaseMapUrl = vworldBaseMapUrl;
-      window.vworldStyledMapUrl = vworldStyledMapUrl;
+      window.vworld2DCache = isHttps ? "https://2d.vworld.kr/2DCache" : "http://2d.vworld.kr:8895/2DCache";
+      window.vworldBaseMapUrl = isHttps ? "https://cdn.vworld.kr/2d" : "http://cdn.vworld.kr:8080/2d";
+      window.vworldStyledMapUrl = isHttps ? "https://2d.vworld.kr/stmap" : "http://2d.vworld.kr:8895/stmap";
       window.isUserDomain = window.location.origin;
       window.vworldIsValid = "true";
       window.vworldErrMsg = "";
@@ -34,8 +30,8 @@
       window.vworld3DUrl = "/js/webglMapInit.js.do";
       window.vworldNoCss = "n";
       window.vworldVectorKey = "483E0418-2F46-3223-80A1-F66D16A24685";
+      window.VWORLD_BOOTSTRAP = { skipped: false };
 
-      window.VWORLD_BOOTSTRAP = { skipped: false, baseUrl: vworldUrl };
       document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/WSViewerStartup.js"><\/script>`);
       document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/VWViewerStartup.v30.min.js?ver=2024061902"><\/script>`);
       document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/vw.ol3WebGL.v30.js?ver=2024061902"><\/script>`);
@@ -43,75 +39,16 @@
   </script>
 </head>
 <body>
-  <div class="page-shell">
-    <header class="hero">
-      <p class="eyebrow">VWorld Service URL Entry</p>
-      <h1>VWorld 서비스 URL 등록용 기본 페이지</h1>
-      <p class="hero-copy">
-        이 페이지는 VWorld에 서비스 URL로 등록할 기본 엔트리입니다.
-        지금은 최소 구조만 두었고, 이후 Blender에서 만든 3D 모델과 VWorld API 호출 코드를 여기에 연결하면 됩니다.
-      </p>
-    </header>
-
-    <main class="layout">
-      <section class="panel">
-        <h2>기본 구조</h2>
-        <ul class="status-list">
-          <li><span>서비스 URL 엔트리</span><strong>준비됨</strong></li>
-          <li><span>VWorld 3D API 연결</span><strong>준비됨</strong></li>
-          <li><span>Blender 3D 모델 연결 지점</span><strong>다음 단계</strong></li>
-        </ul>
-      </section>
-
-      <section class="panel">
-        <h2>등록 URL 확인</h2>
-        <p class="muted">
-          VWorld에 등록하는 서비스 URL은 실제 배포 주소와 정확히 일치해야 합니다.
-          프로토콜, 도메인, 포트, 경로가 다르면 인증 또는 API 호출 오류가 날 수 있습니다.
-        </p>
-        <div class="url-box" id="current-url">현재 URL 확인 중...</div>
-        <p class="muted example-text">
-          예시: `https://your-domain.com/` 또는 `https://your-domain.com/vworld/`
-        </p>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <h2>API Key</h2>
-          <span id="api-key-status">확인 중...</span>
-        </div>
-        <p class="muted">
-          브이월드 WebGL 3D API 3.0은 브라우저에서 사용할 때 `apiKey`와 `domain`을 함께 전달해야 합니다.
-          이 페이지는 로컬 `api.env` 또는 배포 시 생성되는 `static/config.js`를 통해 키를 읽습니다.
-        </p>
-        <p class="muted example-text">
-          GitHub Pages에서는 `api.env`를 직접 읽을 수 없으므로 GitHub Secret에서 `static/config.js`를 생성해 사용합니다.
-        </p>
-        <div class="status-banner" id="map-status" aria-live="polite">3D 지도 로드를 준비 중입니다.</div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <h2>REST API Test</h2>
-          <span id="search-status">대기</span>
-        </div>
-        <p class="muted">
-          브라우저에서 직접 브이월드 REST API를 호출하면 CORS 정책에 걸릴 수 있습니다.
-          이 영역은 참고용이며, 실패해도 3D 지도 로딩과는 별개입니다.
-        </p>
-        <div class="status-banner" id="search-result" aria-live="polite">검색 API 호출 전입니다.</div>
-      </section>
-
-      <section class="panel viewer-panel">
-        <div class="panel-head">
-          <h2>3D Viewer</h2>
-          <span>WebGL 3.0</span>
-        </div>
-        <div id="viewer-root" class="viewer-root"></div>
-      </section>
-    </main>
+  <div class="app-shell">
+    <div class="topbar">
+      <div>
+        <strong>VWorld 3D Basic Example</strong>
+        <span id="key-status">API key 확인 중...</span>
+      </div>
+      <div id="map-status">3D 지도 초기화 대기</div>
+    </div>
+    <div id="viewer-root" class="viewer-root"></div>
   </div>
-
   <script src="./static/app.js"></script>
 </body>
 </html>
