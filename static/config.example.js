@@ -1,0 +1,3 @@
+window.VWORLD_CONFIG = {
+  apiKey: "PUT_YOUR_VWORLD_API_KEY_HERE",
+};

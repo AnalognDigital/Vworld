@@ -23,8 +23,8 @@
         <h2>기본 구조</h2>
         <ul class="status-list">
           <li><span>서비스 URL 엔트리</span><strong>준비됨</strong></li>
-          <li><span>VWorld API 연결 지점</span><strong>대기</strong></li>
-          <li><span>Blender 3D 모델 연결 지점</span><strong>대기</strong></li>
+          <li><span>VWorld 3D API 연결</span><strong>준비됨</strong></li>
+          <li><span>Blender 3D 모델 연결 지점</span><strong>다음 단계</strong></li>
         </ul>
       </section>
 
@@ -40,16 +40,40 @@
         </p>
       </section>
 
+      <section class="panel">
+        <div class="panel-head">
+          <h2>API Key</h2>
+          <span id="api-key-status">확인 중...</span>
+        </div>
+        <p class="muted">
+          브이월드 WebGL 3D API 3.0은 브라우저에서 사용할 때 `apiKey`와 `domain`을 함께 전달해야 합니다.
+          이 페이지는 로컬 저장소 또는 선택적 `static/config.js`를 통해 키를 읽습니다.
+        </p>
+        <label class="field-label" for="api-key-input">브이월드 API Key</label>
+        <div class="control-row">
+          <input
+            id="api-key-input"
+            class="text-input"
+            type="password"
+            autocomplete="off"
+            placeholder="브이월드 API 키를 입력하세요"
+          >
+          <button id="save-key-button" class="action-button" type="button">저장 후 지도 열기</button>
+          <button id="clear-key-button" class="ghost-button" type="button">키 삭제</button>
+        </div>
+        <p class="muted example-text">
+          GitHub Pages에서는 `api.env`를 직접 읽을 수 없으므로 브라우저 저장 또는 별도 `static/config.js`가 필요합니다.
+        </p>
+        <div class="status-banner" id="map-status" aria-live="polite">3D 지도 로드를 준비 중입니다.</div>
+      </section>
+
       <section class="panel viewer-panel">
         <div class="panel-head">
-          <h2>Viewer Mount Point</h2>
-          <span>placeholder</span>
+          <h2>3D Viewer</h2>
+          <span>WebGL 3.0</span>
         </div>
         <div id="viewer-root" class="viewer-root">
-          <div class="viewer-placeholder">
-            <p>여기에 VWorld 지도와 3D 모델 뷰어를 붙이면 됩니다.</p>
-            <p class="muted">예: VWorld API, Cesium, Three.js, glTF/GLB 로더</p>
-          </div>
+          <div id="viewer-canvas" class="viewer-canvas"></div>
         </div>
       </section>
     </main>

@@ -2,3 +2,6 @@
 .tmp/
 __pycache__/
 *.pyc
+*.env
+.env
+static/config.js
