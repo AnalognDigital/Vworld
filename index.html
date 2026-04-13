@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VWorld 2D Basic Example</title>
+  <title>VWorld 3D SOP Basic Example</title>
   <link rel="stylesheet" href="./static/style.css">
   <script src="./static/config.js"></script>
   <script>
@@ -15,25 +15,25 @@
         return;
       }
 
-      const isHttps = window.location.protocol === "https:";
-      const baseUrl = isHttps ? "https://map.vworld.kr" : "http://map.vworld.kr";
-      const params = new URLSearchParams({
-        version: "2.0",
-        apiKey,
-        domain: window.location.host,
-      });
-
+      const baseUrl = window.location.protocol === "https:" ? "https://map.vworld.kr" : "http://map.vworld.kr";
       window.VWORLD_BOOTSTRAP = { skipped: false };
-      document.write(`<script src="${baseUrl}/js/vworldMapInit.js.do?${params.toString()}"><\/script>`);
+      document.write(`<script src="${baseUrl}/js/sopMapInit.js.do?apiKey=${encodeURIComponent(apiKey)}"><\/script>`);
     }());
   </script>
 </head>
 <body>
   <div class="topbar">
-    <strong>VWorld 2D Basic Example</strong>
-    <span id="status">지도 초기화 대기</span>
+    <strong>VWorld 3D SOP Basic Example</strong>
+    <span id="status">3D 지도 초기화 대기</span>
   </div>
-  <div id="vmap" class="map-root"></div>
+  <div id="testmaparea" class="map-root"></div>
+  <div class="controls">
+    <button type="button" onclick="movePangyo()">판교</button>
+    <button type="button" onclick="moveSeoul()">경복궁</button>
+    <button type="button" onclick="moveDokdo()">독도</button>
+    <button type="button" onclick="setLowAltitude()">가깝게</button>
+    <button type="button" onclick="setTilt()">기울이기</button>
+  </div>
   <script src="./static/app.js"></script>
 </body>
 </html>
