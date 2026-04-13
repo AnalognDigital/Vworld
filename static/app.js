@@ -1,5 +1,5 @@
 const statusNode = document.getElementById("status");
-let SOPPlugin = null;
+let map = null;
 
 function setStatus(message) {
   if (statusNode) {
@@ -7,72 +7,35 @@ function setStatus(message) {
   }
 }
 
-function withCamera(callback) {
-  if (!SOPPlugin) {
-    setStatus("SOPPlugin 이 아직 준비되지 않았습니다.");
+function vwmap() {
+  const options = {
+    mapId: "vmap",
+    initPosition: new vw.CameraPosition(
+      new vw.CoordZ(127.425, 38.196, 1548700),
+      new vw.Direction(0, -90, 0),
+    ),
+    logo: true,
+    navigation: true,
+  };
+
+  map = new vw.Map();
+  map.setOption(options);
+  map.start();
+}
+
+function vwmoveTo(x, y, z) {
+  if (!map) {
+    setStatus("지도 객체가 아직 없습니다.");
     return;
   }
 
-  callback(SOPPlugin.getViewCamera());
+  const movePo = new vw.CoordZ(x, y, z);
+  const mPosi = new vw.CameraPosition(movePo, new vw.Direction(0, -80, 0));
+  map.moveTo(mPosi);
+  setStatus(`이동: ${x}, ${y}, ${z}`);
 }
 
-function initCall(obj) {
-  SOPPlugin = obj;
-  const camera = SOPPlugin.getViewCamera();
-  camera.moveLonLat(127.0285, 37.4980);
-  camera.setAltitude(10000);
-  setStatus("3D 지도 로드 성공");
-}
-
-function failureCall(msg) {
-  setStatus(`3D 지도 로드 실패: ${msg}`);
-}
-
-function movePangyo() {
-  withCamera((camera) => {
-    camera.moveLonLat(127.0285, 37.4980);
-    camera.setAltitude(10000);
-    setStatus("판교로 이동");
-  });
-}
-
-function moveSeoul() {
-  withCamera((camera) => {
-    camera.moveLonLat(126.9770, 37.5778);
-    camera.setAltitude(3000);
-    setStatus("경복궁으로 이동");
-  });
-}
-
-function moveDokdo() {
-  withCamera((camera) => {
-    camera.moveLonLat(131.8682, 37.2402);
-    camera.setAltitude(3000);
-    setStatus("독도로 이동");
-  });
-}
-
-function setLowAltitude() {
-  withCamera((camera) => {
-    camera.setAltitude(1500);
-    setStatus("카메라 고도 변경");
-  });
-}
-
-function setTilt() {
-  withCamera((camera) => {
-    camera.setTilt(30);
-    setStatus("카메라 기울기 변경");
-  });
-}
-
-window.movePangyo = movePangyo;
-window.moveSeoul = moveSeoul;
-window.moveDokdo = moveDokdo;
-window.setLowAltitude = setLowAltitude;
-window.setTilt = setTilt;
-window.initCall = initCall;
-window.failureCall = failureCall;
+window.vwmoveTo = vwmoveTo;
 
 window.addEventListener("error", (event) => {
   setStatus(`스크립트 오류: ${event.message}`);
@@ -84,18 +47,19 @@ window.addEventListener("load", () => {
     return;
   }
 
-  if (!window.sop?.earth?.createInstance) {
-    setStatus("sop.earth.createInstance 를 찾지 못했습니다.");
+  if (!window.vw?.Map) {
+    setStatus("vw.Map 을 찾지 못했습니다.");
     return;
   }
 
-  setStatus("3D 엔진 인스턴스 생성 중");
-  window.setTimeout(() => {
-    try {
-      sop.earth.createInstance("testmaparea", initCall, failureCall);
-    } catch (error) {
-      setStatus(`인스턴스 생성 오류: ${error.message}`);
-      console.error(error);
-    }
-  }, 1);
+  try {
+    vwmap();
+    window.setTimeout(() => {
+      const hasCanvas = !!document.querySelector("#vmap canvas");
+      setStatus(hasCanvas ? "3D 지도 로드 성공" : "지도 객체 생성됨, 화면 확인 필요");
+    }, 1000);
+  } catch (error) {
+    setStatus(`오류: ${error.message}`);
+    console.error(error);
+  }
 });

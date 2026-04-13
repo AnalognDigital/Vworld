@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VWorld 3D SOP Basic Example</title>
+  <title>VWorld WebGL 3D Sample</title>
   <link rel="stylesheet" href="./static/style.css">
   <script src="./static/config.js"></script>
   <script>
@@ -17,22 +17,20 @@
 
       const baseUrl = window.location.protocol === "https:" ? "https://map.vworld.kr" : "http://map.vworld.kr";
       window.VWORLD_BOOTSTRAP = { skipped: false };
-      document.write(`<script src="${baseUrl}/js/sopMapInit.js.do?apiKey=${encodeURIComponent(apiKey)}"><\/script>`);
+      document.write(`<script src="${baseUrl}/js/webglMapInit.js.do?version=3.0&apiKey=${encodeURIComponent(apiKey)}"><\/script>`);
     }());
   </script>
 </head>
 <body>
   <div class="topbar">
-    <strong>VWorld 3D SOP Basic Example</strong>
+    <strong>VWorld WebGL 3D Sample</strong>
     <span id="status">3D 지도 초기화 대기</span>
   </div>
-  <div id="testmaparea" class="map-root"></div>
+  <div id="vmap" class="map-root"></div>
   <div class="controls">
-    <button type="button" onclick="movePangyo()">판교</button>
-    <button type="button" onclick="moveSeoul()">경복궁</button>
-    <button type="button" onclick="moveDokdo()">독도</button>
-    <button type="button" onclick="setLowAltitude()">가깝게</button>
-    <button type="button" onclick="setTilt()">기울이기</button>
+    <button type="button" onclick="vwmoveTo(126.9231,37.5262083301207,5000)">여의도</button>
+    <button type="button" onclick="vwmoveTo(131.864677840073,37.2414795955336,2000)">독도</button>
+    <button type="button" onclick="vwmoveTo(126.9770,37.5778,3000)">경복궁</button>
   </div>
   <script src="./static/app.js"></script>
 </body>
