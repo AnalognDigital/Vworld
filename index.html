@@ -47,22 +47,10 @@
         </div>
         <p class="muted">
           브이월드 WebGL 3D API 3.0은 브라우저에서 사용할 때 `apiKey`와 `domain`을 함께 전달해야 합니다.
-          이 페이지는 로컬 저장소 또는 선택적 `static/config.js`를 통해 키를 읽습니다.
+          이 페이지는 로컬 `api.env` 또는 배포 시 생성되는 `static/config.js`를 통해 키를 읽습니다.
         </p>
-        <label class="field-label" for="api-key-input">브이월드 API Key</label>
-        <div class="control-row">
-          <input
-            id="api-key-input"
-            class="text-input"
-            type="password"
-            autocomplete="off"
-            placeholder="브이월드 API 키를 입력하세요"
-          >
-          <button id="save-key-button" class="action-button" type="button">저장 후 지도 열기</button>
-          <button id="clear-key-button" class="ghost-button" type="button">키 삭제</button>
-        </div>
         <p class="muted example-text">
-          GitHub Pages에서는 `api.env`를 직접 읽을 수 없으므로 브라우저 저장 또는 별도 `static/config.js`가 필요합니다.
+          GitHub Pages에서는 `api.env`를 직접 읽을 수 없으므로 GitHub Secret에서 `static/config.js`를 생성해 사용합니다.
         </p>
         <div class="status-banner" id="map-status" aria-live="polite">3D 지도 로드를 준비 중입니다.</div>
       </section>

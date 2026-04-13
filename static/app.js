@@ -1,10 +1,6 @@
 const currentUrl = document.getElementById("current-url");
-const apiKeyInput = document.getElementById("api-key-input");
-const saveKeyButton = document.getElementById("save-key-button");
-const clearKeyButton = document.getElementById("clear-key-button");
 const apiKeyStatus = document.getElementById("api-key-status");
 const mapStatus = document.getElementById("map-status");
-const storageKey = "vworld.api.key";
 const viewerCanvasId = "viewer-canvas";
 
 let mapInstance = null;
@@ -47,21 +43,11 @@ function getStoredKey() {
     return runtimeKey;
   }
 
-  const localKey = window.localStorage.getItem(storageKey)?.trim();
-  if (localKey) {
-    return localKey;
-  }
-
   return "";
 }
 
 function updateKeyUi() {
   const key = getStoredKey();
-
-  if (apiKeyInput && !apiKeyInput.value && key) {
-    apiKeyInput.value = key;
-  }
-
   setKeyStatus(maskKey(key));
 }
 
@@ -130,7 +116,7 @@ async function initMap() {
   updateKeyUi();
 
   if (!apiKey) {
-    setStatus("API 키가 없어 3D 지도를 시작하지 않았습니다. 위 입력창에 키를 넣고 버튼을 누르세요.", "warning");
+    setStatus("API 키를 찾지 못했습니다. 로컬은 api.env, GitHub Pages는 저장소 Secret으로 설정해야 합니다.", "warning");
     return;
   }
 
@@ -145,28 +131,6 @@ async function initMap() {
     setStatus(error.message, "error");
     console.error(error);
   }
-}
-
-function handleClearKey() {
-  window.localStorage.removeItem(storageKey);
-  if (apiKeyInput) {
-    apiKeyInput.value = "";
-  }
-  setKeyStatus("없음");
-  setStatus("저장된 API 키를 삭제했습니다. 새 키를 입력하면 다시 로드할 수 있습니다.", "info");
-}
-
-async function handleSaveKey() {
-  const nextKey = apiKeyInput?.value.trim() ?? "";
-
-  if (!nextKey) {
-    setStatus("API 키를 입력한 뒤 다시 시도하세요.", "warning");
-    return;
-  }
-
-  window.localStorage.setItem(storageKey, nextKey);
-  updateKeyUi();
-  await initMap();
 }
 
 async function loadOptionalConfig() {
@@ -187,25 +151,6 @@ window.VWORLD_APP = {
   path: window.location.pathname,
   initMap,
 };
-
-if (saveKeyButton) {
-  saveKeyButton.addEventListener("click", () => {
-    handleSaveKey();
-  });
-}
-
-if (clearKeyButton) {
-  clearKeyButton.addEventListener("click", handleClearKey);
-}
-
-if (apiKeyInput) {
-  apiKeyInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleSaveKey();
-    }
-  });
-}
 
 loadOptionalConfig().finally(() => {
   updateKeyUi();

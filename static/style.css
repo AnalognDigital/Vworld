@@ -159,53 +159,6 @@ body {
   min-height: 420px;
 }
 
-.field-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 0.92rem;
-  font-weight: 700;
-}
-
-.control-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.text-input {
-  flex: 1 1 260px;
-  min-height: 48px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.84);
-  color: var(--text);
-  font: inherit;
-}
-
-.action-button,
-.ghost-button {
-  min-height: 48px;
-  padding: 0 16px;
-  border-radius: 14px;
-  font: inherit;
-  cursor: pointer;
-}
-
-.action-button {
-  border: 0;
-  background: var(--accent);
-  color: #fffaf2;
-  font-weight: 700;
-}
-
-.ghost-button {
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.65);
-  color: var(--accent-strong);
-  font-weight: 700;
-}
-
 .status-banner {
   margin-top: 16px;
   padding: 14px 16px;
@@ -246,9 +199,5 @@ body {
   .viewer-root,
   .viewer-canvas {
     min-height: 320px;
-  }
-
-  .control-row {
-    flex-direction: column;
   }
 }
