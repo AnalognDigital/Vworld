@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VWorld Service URL Page</title>
+  <meta name="description" content="VWorld API와 3D 모델을 결합하기 위한 기본 웹페이지">
+  <link rel="stylesheet" href="./static/style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">VWorld Service URL Entry</p>
+      <h1>VWorld 서비스 URL 등록용 기본 페이지</h1>
+      <p class="hero-copy">
+        이 페이지는 VWorld에 서비스 URL로 등록할 기본 엔트리입니다.
+        지금은 최소 구조만 두었고, 이후 Blender에서 만든 3D 모델과 VWorld API 호출 코드를 여기에 연결하면 됩니다.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>기본 구조</h2>
+        <ul class="status-list">
+          <li><span>서비스 URL 엔트리</span><strong>준비됨</strong></li>
+          <li><span>VWorld API 연결 지점</span><strong>대기</strong></li>
+          <li><span>Blender 3D 모델 연결 지점</span><strong>대기</strong></li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>등록 URL 확인</h2>
+        <p class="muted">
+          VWorld에 등록하는 서비스 URL은 실제 배포 주소와 정확히 일치해야 합니다.
+          프로토콜, 도메인, 포트, 경로가 다르면 인증 또는 API 호출 오류가 날 수 있습니다.
+        </p>
+        <div class="url-box" id="current-url">현재 URL 확인 중...</div>
+        <p class="muted example-text">
+          예시: `https://your-domain.com/` 또는 `https://your-domain.com/vworld/`
+        </p>
+      </section>
+
+      <section class="panel viewer-panel">
+        <div class="panel-head">
+          <h2>Viewer Mount Point</h2>
+          <span>placeholder</span>
+        </div>
+        <div id="viewer-root" class="viewer-root">
+          <div class="viewer-placeholder">
+            <p>여기에 VWorld 지도와 3D 모델 뷰어를 붙이면 됩니다.</p>
+            <p class="muted">예: VWorld API, Cesium, Three.js, glTF/GLB 로더</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./static/app.js"></script>
+</body>
+</html>
