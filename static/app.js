@@ -6,7 +6,13 @@ function setStatus(message) {
   }
 }
 
+window.addEventListener("error", (event) => {
+  setStatus(`스크립트 오류: ${event.message}`);
+});
+
 window.addEventListener("load", () => {
+  setStatus("로드 이벤트 감지");
+
   if (window.VWORLD_BOOTSTRAP?.skipped) {
     setStatus("API key를 찾지 못했습니다.");
     return;
