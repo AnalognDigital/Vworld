@@ -6,6 +6,27 @@
   <title>VWorld Service URL Page</title>
   <meta name="description" content="VWorld API와 3D 모델을 결합하기 위한 기본 웹페이지">
   <link rel="stylesheet" href="./static/style.css">
+  <script src="./static/config.js"></script>
+  <script>
+    (function () {
+      const apiKey = window.VWORLD_CONFIG?.apiKey?.trim();
+
+      if (!apiKey) {
+        window.VWORLD_BOOTSTRAP = { skipped: true };
+        return;
+      }
+
+      const params = new URLSearchParams({
+        version: "3.0",
+        apiKey,
+        domain: window.location.origin,
+      });
+
+      const loaderUrl = `https://map.vworld.kr/js/webglMapInit.js.do?${params.toString()}`;
+      window.VWORLD_BOOTSTRAP = { skipped: false, loaderUrl };
+      document.write(`<script src="${loaderUrl}"><\/script>`);
+    }());
+  </script>
 </head>
 <body>
   <div class="page-shell">

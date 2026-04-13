@@ -6,7 +6,6 @@ const searchResult = document.getElementById("search-result");
 const viewerCanvasId = "viewer-canvas";
 
 let mapInstance = null;
-let loaderPromise = null;
 
 if (currentUrl) {
   currentUrl.textContent = window.location.href;
@@ -68,16 +67,6 @@ function updateKeyUi() {
   setKeyStatus(maskKey(key));
 }
 
-function buildLoaderUrl(apiKey) {
-  const params = new URLSearchParams({
-    version: "3.0",
-    apiKey,
-    domain: window.location.origin,
-  });
-
-  return `https://map.vworld.kr/js/webglMapInit.js.do?${params.toString()}`;
-}
-
 function buildSearchUrl(apiKey) {
   const params = new URLSearchParams({
     service: "search",
@@ -93,23 +82,6 @@ function buildSearchUrl(apiKey) {
   });
 
   return `https://api.vworld.kr/req/search?${params.toString()}`;
-}
-
-function loadVworldScript(apiKey) {
-  if (loaderPromise) {
-    return loaderPromise;
-  }
-
-  loaderPromise = new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = buildLoaderUrl(apiKey);
-    script.async = true;
-    script.onload = resolve;
-    script.onerror = () => reject(new Error("브이월드 스크립트를 불러오지 못했습니다."));
-    document.head.appendChild(script);
-  });
-
-  return loaderPromise;
 }
 
 function createDefaultCameraPosition() {
@@ -156,14 +128,15 @@ async function initMap() {
     return;
   }
 
-  setStatus("브이월드 3D 스크립트를 불러오는 중입니다.", "info");
+  setStatus("브이월드 3D 스크립트 상태를 확인하는 중입니다.", "info");
 
   try {
-    await loadVworldScript(apiKey);
+    if (window.VWORLD_BOOTSTRAP?.skipped) {
+      throw new Error("브이월드 3D 스크립트 초기화가 건너뛰어졌습니다.");
+    }
     startMap();
     setStatus("브이월드 3D 지도가 로드되었습니다.", "success");
   } catch (error) {
-    loaderPromise = null;
     setStatus(error.message, "error");
     console.error(error);
   }
@@ -202,17 +175,6 @@ async function testSearchApi() {
   }
 }
 
-async function loadOptionalConfig() {
-  return new Promise((resolve) => {
-    const script = document.createElement("script");
-    script.src = "./static/config.js";
-    script.async = true;
-    script.onload = resolve;
-    script.onerror = resolve;
-    document.head.appendChild(script);
-  });
-}
-
 window.VWORLD_APP = {
   viewerRootId: "viewer-root",
   serviceUrl: window.location.href,
@@ -221,8 +183,6 @@ window.VWORLD_APP = {
   initMap,
 };
 
-loadOptionalConfig().finally(() => {
-  updateKeyUi();
-  testSearchApi();
-  initMap();
-});
+updateKeyUi();
+testSearchApi();
+initMap();
