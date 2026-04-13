@@ -16,8 +16,16 @@
       }
 
       const baseUrl = window.location.protocol === "https:" ? "https://map.vworld.kr" : "http://map.vworld.kr";
+      const domainValue = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+        ? window.location.host
+        : window.location.origin;
+      const params = new URLSearchParams({
+        version: "3.0",
+        apiKey,
+        domain: domainValue,
+      });
       window.VWORLD_BOOTSTRAP = { skipped: false };
-      document.write(`<script src="${baseUrl}/js/webglMapInit.js.do?version=3.0&apiKey=${encodeURIComponent(apiKey)}"><\/script>`);
+      document.write(`<script src="${baseUrl}/js/webglMapInit.js.do?${params.toString()}"><\/script>`);
     }());
   </script>
 </head>
