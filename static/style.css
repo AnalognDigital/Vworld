@@ -145,6 +145,9 @@ body {
 }
 
 .viewer-root {
+  position: relative;
+  width: 100%;
+  height: 520px;
   min-height: 520px;
   border: 1px solid var(--line);
   border-radius: 22px;
@@ -152,11 +155,6 @@ body {
   background:
     linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.18)),
     linear-gradient(120deg, #b59c78 0%, #efe5d3 44%, #d6c1a0 100%);
-}
-
-.viewer-canvas {
-  width: 100%;
-  min-height: 420px;
 }
 
 .status-banner {
@@ -197,7 +195,8 @@ body {
   }
 
   .viewer-root,
-  .viewer-canvas {
+  .viewer-root {
+    height: 320px;
     min-height: 320px;
   }
 }

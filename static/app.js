@@ -3,7 +3,7 @@ const apiKeyStatus = document.getElementById("api-key-status");
 const mapStatus = document.getElementById("map-status");
 const searchStatus = document.getElementById("search-status");
 const searchResult = document.getElementById("search-result");
-const viewerCanvasId = "viewer-canvas";
+const viewerCanvasId = "viewer-root";
 
 let mapInstance = null;
 
@@ -135,7 +135,14 @@ async function initMap() {
       throw new Error("브이월드 3D 스크립트 초기화가 건너뛰어졌습니다.");
     }
     startMap();
-    setStatus("브이월드 3D 지도가 로드되었습니다.", "success");
+    window.setTimeout(() => {
+      const viewerRoot = document.getElementById(viewerCanvasId);
+      const hasCanvas = !!viewerRoot?.querySelector("canvas");
+      setStatus(
+        hasCanvas ? "브이월드 3D 지도가 로드되었습니다." : "브이월드 객체는 생성됐지만 화면 캔버스가 아직 보이지 않습니다.",
+        hasCanvas ? "success" : "warning",
+      );
+    }, 800);
   } catch (error) {
     setStatus(error.message, "error");
     console.error(error);
@@ -185,4 +192,6 @@ window.VWORLD_APP = {
 
 updateKeyUi();
 testSearchApi();
-initMap();
+window.addEventListener("load", () => {
+  initMap();
+});
