@@ -1,6 +1,8 @@
 const currentUrl = document.getElementById("current-url");
 const apiKeyStatus = document.getElementById("api-key-status");
 const mapStatus = document.getElementById("map-status");
+const searchStatus = document.getElementById("search-status");
+const searchResult = document.getElementById("search-result");
 const viewerCanvasId = "viewer-canvas";
 
 let mapInstance = null;
@@ -23,6 +25,21 @@ function setKeyStatus(message) {
   if (apiKeyStatus) {
     apiKeyStatus.textContent = message;
   }
+}
+
+function setSearchStatus(message) {
+  if (searchStatus) {
+    searchStatus.textContent = message;
+  }
+}
+
+function setSearchResult(message, tone = "info") {
+  if (!searchResult) {
+    return;
+  }
+
+  searchResult.textContent = message;
+  searchResult.dataset.tone = tone;
 }
 
 function maskKey(value) {
@@ -59,6 +76,23 @@ function buildLoaderUrl(apiKey) {
   });
 
   return `https://map.vworld.kr/js/webglMapInit.js.do?${params.toString()}`;
+}
+
+function buildSearchUrl(apiKey) {
+  const params = new URLSearchParams({
+    service: "search",
+    request: "search",
+    version: "2.0",
+    size: "1",
+    page: "1",
+    query: "판교역",
+    type: "place",
+    format: "json",
+    errorformat: "json",
+    key: apiKey,
+  });
+
+  return `https://api.vworld.kr/req/search?${params.toString()}`;
 }
 
 function loadVworldScript(apiKey) {
@@ -117,6 +151,8 @@ async function initMap() {
 
   if (!apiKey) {
     setStatus("API 키를 찾지 못했습니다. 로컬은 api.env, GitHub Pages는 저장소 Secret으로 설정해야 합니다.", "warning");
+    setSearchStatus("키 없음");
+    setSearchResult("검색 API 테스트도 키가 없어 실행하지 않았습니다.", "warning");
     return;
   }
 
@@ -129,6 +165,39 @@ async function initMap() {
   } catch (error) {
     loaderPromise = null;
     setStatus(error.message, "error");
+    console.error(error);
+  }
+}
+
+async function testSearchApi() {
+  const apiKey = getStoredKey();
+
+  if (!apiKey) {
+    setSearchStatus("키 없음");
+    setSearchResult("검색 API 테스트도 키가 없어 실행하지 않았습니다.", "warning");
+    return;
+  }
+
+  setSearchStatus("호출 중");
+  setSearchResult("브이월드 검색 API를 호출하는 중입니다.", "info");
+
+  try {
+    const response = await fetch(buildSearchUrl(apiKey));
+    const payload = await response.json();
+
+    if (!response.ok || payload?.response?.status !== "OK") {
+      throw new Error(payload?.response?.error?.text || "브이월드 검색 API 호출이 실패했습니다.");
+    }
+
+    const item = payload.response.result.items?.[0];
+    const title = item?.title || "결과 없음";
+    const category = item?.category || "분류 없음";
+
+    setSearchStatus("성공");
+    setSearchResult(`검색 성공: ${title} / ${category}`, "success");
+  } catch (error) {
+    setSearchStatus("실패");
+    setSearchResult(`검색 실패: ${error.message}`, "error");
     console.error(error);
   }
 }
@@ -154,5 +223,6 @@ window.VWORLD_APP = {
 
 loadOptionalConfig().finally(() => {
   updateKeyUi();
+  testSearchApi();
   initMap();
 });
