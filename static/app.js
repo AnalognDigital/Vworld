@@ -107,10 +107,6 @@ function startMap() {
     logo: true,
     navigation: true,
   });
-  map.setMapId(viewerCanvasId);
-  map.setInitPosition(createDefaultCameraPosition());
-  map.setLogoVisible(true);
-  map.setNavigationZoomVisible(true);
   map.start();
 
   mapInstance = map;
@@ -177,7 +173,7 @@ async function testSearchApi() {
     setSearchResult(`검색 성공: ${title} / ${category}`, "success");
   } catch (error) {
     setSearchStatus("실패");
-    setSearchResult(`검색 실패: ${error.message}`, "error");
+    setSearchResult(`검색 실패: ${error.message} (브라우저 CORS 제한일 수 있음)`, "error");
     console.error(error);
   }
 }

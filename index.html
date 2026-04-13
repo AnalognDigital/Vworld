@@ -16,15 +16,29 @@
         return;
       }
 
-      const params = new URLSearchParams({
-        version: "3.0",
-        apiKey,
-        domain: window.location.origin,
-      });
+      const isHttps = window.location.origin.indexOf("https:") >= 0;
+      const vworldUrl = isHttps ? "https://map.vworld.kr" : "http://map.vworld.kr";
+      const vworld2DCache = isHttps ? "https://2d.vworld.kr/2DCache" : "http://2d.vworld.kr:8895/2DCache";
+      const vworldBaseMapUrl = isHttps ? "https://cdn.vworld.kr/2d" : "http://cdn.vworld.kr:8080/2d";
+      const vworldStyledMapUrl = isHttps ? "https://2d.vworld.kr/stmap" : "http://2d.vworld.kr:8895/stmap";
 
-      const loaderUrl = `https://map.vworld.kr/js/webglMapInit.js.do?${params.toString()}`;
-      window.VWORLD_BOOTSTRAP = { skipped: false, loaderUrl };
-      document.write(`<script src="${loaderUrl}"><\/script>`);
+      window.v_protocol = isHttps ? "https://" : "http://";
+      window.vworldUrl = vworldUrl;
+      window.vworld2DCache = vworld2DCache;
+      window.vworldBaseMapUrl = vworldBaseMapUrl;
+      window.vworldStyledMapUrl = vworldStyledMapUrl;
+      window.isUserDomain = window.location.origin;
+      window.vworldIsValid = "true";
+      window.vworldErrMsg = "";
+      window.vworldApiKey = apiKey;
+      window.vworld3DUrl = "/js/webglMapInit.js.do";
+      window.vworldNoCss = "n";
+      window.vworldVectorKey = "483E0418-2F46-3223-80A1-F66D16A24685";
+
+      window.VWORLD_BOOTSTRAP = { skipped: false, baseUrl: vworldUrl };
+      document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/WSViewerStartup.js"><\/script>`);
+      document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/VWViewerStartup.v30.min.js?ver=2024061902"><\/script>`);
+      document.write(`<script src="${vworldUrl}/js/ws3dmap/WS3DRelease3/vw.ol3WebGL.v30.js?ver=2024061902"><\/script>`);
     }());
   </script>
 </head>
@@ -82,7 +96,8 @@
           <span id="search-status">대기</span>
         </div>
         <p class="muted">
-          브이월드 검색 API로 `판교역`을 조회해 키와 도메인 설정이 실제로 동작하는지 먼저 확인합니다.
+          브라우저에서 직접 브이월드 REST API를 호출하면 CORS 정책에 걸릴 수 있습니다.
+          이 영역은 참고용이며, 실패해도 3D 지도 로딩과는 별개입니다.
         </p>
         <div class="status-banner" id="search-result" aria-live="polite">검색 API 호출 전입니다.</div>
       </section>
